@@ -13,14 +13,13 @@ def register():
         session['password'] = form.password.data
         flash('You have registered.')
         return redirect(url_for('auth.login'))
-    return render_template('auth/register.html', current_time=datetime.utcnow(), form=form)
+    return render_template("auth/register.html", current_time=datetime.utcnow(), form=form)
 
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-    if form.validate_on_submit():
-        if form.username.data == session.get('username') and form.password.data == session.get('password'):
-            # flash('You have loged.')
-            return redirect(url_for('main.index'))
-    return render_template('auth/login.html', form=form)
+    if form.validate_on_submit() and form.username.data == session.get(
+            'username') and form.password.data == session.get('password'):
+        return redirect(url_for('main.index'))
+    return render_template("auth/login.html", form=form)
