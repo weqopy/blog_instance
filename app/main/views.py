@@ -6,9 +6,9 @@ from . import main
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template('index.html', current_time=datetime.utcnow())
+    return render_template("index.html", current_time=datetime.utcnow())
 
 
 @main.route('/about/')
 def about():
-    return render_template('about.html')
+    return render_template("about.html")
