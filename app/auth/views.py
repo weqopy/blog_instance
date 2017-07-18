@@ -1,9 +1,9 @@
 from flask import render_template, url_for, redirect, flash, request
-from flask_login import login_user, logout_user, login_required
+from flask_login import login_user, logout_user, login_required, current_user
 from datetime import datetime
 
 from . import auth
-from .forms import RegistForm, LoginForm
+from .forms import RegistForm, LoginForm, Change_Password_Form
 from .. import db
 from ..models import User
 
@@ -39,3 +39,23 @@ def logout():
     logout_user()
     flash('You have been logged out.')
     return redirect(url_for('main.index'))
+
+
+@auth.route('/account', methods=['GET', 'POST'])
+def account():
+    return render_template('auth/account.html', current_time=datetime.utcnow())
+
+
+@auth.route('/change_password', methods=['GET', 'POST'])
+def change_password():
+    form = Change_Password_Form()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=current_user.username).first()
+        if user.verify_password(form.old_password.data):
+            user.password = form.new_password.data
+            db.session.add(user)
+            db.session.commit()
+            flash('You have changed password.')
+            return redirect(url_for('main.index'))
+        flash('Invalid old password')
+    return render_template('auth/change_password.html', form=form)
