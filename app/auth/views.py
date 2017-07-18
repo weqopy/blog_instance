@@ -15,7 +15,6 @@ def register():
         user = User(username=form.username.data,
                     password=form.password.data)
         db.session.add(user)
-        db.session.commit()
         flash('You have registered.')
         return redirect(url_for('auth.login'))
     return render_template("auth/register.html", current_time=datetime.utcnow(), form=form)
@@ -50,11 +49,9 @@ def account():
 def change_password():
     form = Change_Password_Form()
     if form.validate_on_submit():
-        user = User.query.filter_by(username=current_user.username).first()
-        if user.verify_password(form.old_password.data):
-            user.password = form.new_password.data
-            db.session.add(user)
-            db.session.commit()
+        if current_user.verify_password(form.old_password.data):
+            current_user.password = form.new_password.data
+            db.session.add(current_user)
             flash('You have changed password.')
             return redirect(url_for('main.index'))
         flash('Invalid old password')
