@@ -1,11 +1,12 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
-from wtforms.validators import DataRequired, EqualTo
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, ValidationError
+from wtforms.validators import DataRequired, EqualTo, Regexp, Length
+from ..models import User
 
 
 class RegistForm(FlaskForm):
     """docstring for RegistForm"""
-    username = StringField("What's your name?", validators=[DataRequired()])
+    username = StringField("What's your name?", validators=[DataRequired(), Length(1, 64), Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0, 'Usernames must have only letters, numbers, dots or underscores')])
     password = PasswordField(
         "Password.",
         validators=[DataRequired(),
@@ -14,6 +15,10 @@ class RegistForm(FlaskForm):
     confirm_pw = PasswordField('Confirm password.',
                                validators=[DataRequired()])
     submit = SubmitField('Submit')
+
+    def validate_username(self, field):
+        if User.query.filter_by(username=field.data).first():
+            raise ValidationError('Username already in use.')
 
 
 class LoginForm(FlaskForm):
