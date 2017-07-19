@@ -17,11 +17,18 @@
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <li class="activate"><a href="/">Home</a></li>
+                {% if current_user.is_authenticated %}
+                <li><a href="{{ url_for('auth.account') }}">Account</a></li>
+                {% endif %}
                 <li><a href="/about">About</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li class="activate"><a href="/login">Log in</a></li>
-                <li><a href="/register">Sign in</a></li>
+                {% if current_user.is_authenticated %}
+                <li><a href="{{ url_for('auth.logout') }}">Sign Out</a></li>
+                {% else %}
+                <li><a href="{{ url_for('auth.login') }}">Sign in</a></li>
+                <li><a href="{{ url_for('auth.register') }}">Sign up</a></li>
+                {% endif %}
             </ul>
         </div>
     </div>

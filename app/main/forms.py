@@ -1,6 +1,9 @@
-from flask_wtf import FlaskFrom
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField
+from wtforms.validators import DataRequired
 
 
-class NameForm(FlaskFrom):
+class NameForm(FlaskForm):
     """docstring for NameForm"""
-    pass
+    name = StringField('What is your name?', validators=[DataRequired()])
+    submit = SubmitField('Submit')

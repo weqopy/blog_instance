@@ -4,7 +4,14 @@
 
 {% block page_content %}
 <div class="page_header">
-    <h1>Welcome.</h1>
+    <h1>
+    Welcome,
+    {% if current_user.is_authenticated %}
+        {{ current_user.username }}
+    {% else %}
+        Stranger
+    {% endif %}!
+    </h1>
     <p>The local date and time is {{ moment(current_time).format('LLL') }}.</p>
 </div>
 {% endblock %}
