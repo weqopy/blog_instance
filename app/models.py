@@ -10,7 +10,7 @@ class Role(db.Model):
     users = db.relationship('User', backref='role', lazy='dynamic')
 
     def __repr__(self):
-        return '<Role %r>' % self.name
+        return '<Role {}>'.format(self.name)
 
 
 class User(UserMixin, db.Model):
@@ -32,7 +32,7 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
     def __repr__(self):
-        return '<User %r>' % self.username
+        return '<User {}}>'.format(self.username)
 
 
 @login_manager.user_loader
