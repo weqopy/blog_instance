@@ -17,7 +17,7 @@ class Config(object):
     MAIL_USE_TLS = True
 
     FLASKY_MAIL_SUBJECT_PREFIX = '[Blog-Instance]'
-    FLASKY_MAIL_SENDER = 'Flasky Admin <serder@example.com>'
+    FLASKY_MAIL_SENDER = 'Blog-Instance Admin <sender@example.com>'
 
     @staticmethod
     def init_app(app):
