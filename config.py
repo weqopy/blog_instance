@@ -16,6 +16,7 @@ class Config(object):
     MAIL_PORT = 587
     MAIL_USE_TLS = True
 
+    # 邮件标题及发件人名称，example.com 无用
     FLASKY_MAIL_SUBJECT_PREFIX = '[Blog-Instance]'
     FLASKY_MAIL_SENDER = 'Blog-Instance Admin <sender@example.com>'
 
