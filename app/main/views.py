@@ -18,9 +18,9 @@ def index():
             user = User(username=form.name.data)
             db.session.add(user)
             session['known'] = False
-            if current_app.config['FLASKY_ADMIN']:
-                send_email(current_app.config['FLASKY_ADMIN'],
-                           'New User', 'mail/new_user', user=user)
+            # if current_app.config['FLASKY_ADMIN']:
+            #     send_email(current_app.config['FLASKY_ADMIN'],
+            #                'New User', 'mail/new_user', user=user)
         else:
             session['known'] = True
         session['name'] = form.name.data
@@ -32,6 +32,7 @@ def index():
 #     return render_template("index.html", current_time=datetime.utcnow())
 
 
+# TODO: /about错误
 @main.route('/about/')
 def about():
     return render_template("about.html")
