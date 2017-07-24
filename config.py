@@ -4,7 +4,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config(object):
     """docstring for Config"""
-    SECRET_KEY = 'a secret_key string'
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'a secret_key string'
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
