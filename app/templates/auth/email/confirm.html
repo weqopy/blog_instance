@@ -2,7 +2,7 @@
 <p>欢迎加入 Blog-Instance。</p>
 <p>请点击以下链接确认账户：<a href="{{ url_for('auth.confirm', token=token, _external=True) }}">点击这里</a></p>
 
-<p>确认链接：</p>
+<p>或者复制以下链接到浏览器地址栏打开：</p>
 <p>{{ url_for('auth.confirm', token=token, _external=True) }}</p>
 
 <p>Blog Team</p>

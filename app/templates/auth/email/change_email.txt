@@ -1,0 +1,9 @@
+{{ user.username}} 你好，
+请点击以下链接确认修改邮箱：{{ url_for('auth.change_email', token=token, _external=True) }}"点击这里
+
+或者也可以复制以下链接到地址栏打开：
+{{ url_for('auth.change_email', token=token, _external=True) }}
+
+Blog Team
+
+注意：请勿回复此邮件。

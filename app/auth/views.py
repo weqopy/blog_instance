@@ -3,7 +3,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from datetime import datetime
 
 from . import auth
-from .forms import RegistForm, LoginForm, Change_Password_Form, PasswordResetRequestForm, PasswordResetForm
+from .forms import RegistForm, LoginForm, Change_Password_Form, PasswordResetRequestForm, PasswordResetForm, ChangeEmailRequestForm
 from .. import db
 from ..models import User
 from ..email import send_email
@@ -50,7 +50,6 @@ def account():
     return render_template('auth/account.html', current_time=datetime.utcnow())
 
 
-# TODO: 修改邮箱
 @auth.route('/change_password', methods=['GET', 'POST'])
 @login_required
 def change_password():
@@ -136,4 +135,28 @@ def resend_confirmation():
     send_email(current_user.email, '确认账户', 'auth/email/confirm',
                user=current_user, token=token)
     flash('新的确认邮件已发送')
+    return redirect(url_for('main.index'))
+
+
+@auth.route('/change_email', methods=['GET', 'POST'])
+@login_required
+def change_email_request():
+    form = ChangeEmailRequestForm()
+    if form.validate_on_submit():
+        new_email = form.new_email.data
+        token = current_user.generate_change_email_token(new_email)
+        send_email(new_email, 'Change Email', 'auth/email/change_email',
+                   user=current_user, token=token, next=request.args.get('next'))
+        flash('确认邮件已发送至新邮箱')
+        return redirect(url_for('auth.account'))
+    return render_template('auth/change_email.html', form=form)
+
+
+@auth.route('/change_email/<token>')
+@login_required
+def change_email(token):
+    if current_user.change_email(token):
+        flash('邮箱已更改')
+    else:
+        flash('确认链接无效或已过期')
     return redirect(url_for('main.index'))
