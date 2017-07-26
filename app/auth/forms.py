@@ -6,7 +6,8 @@ from ..models import User
 
 class RegistForm(FlaskForm):
     """docstring for RegistForm"""
-    email = StringField('Email', validators=[DataRequired(), Length(1, 64), Email()])
+    email = StringField('Email', validators=[
+                        DataRequired(), Length(1, 64), Email()])
     username = StringField("What's your name?", validators=[DataRequired(), Length(1, 64), Regexp(
         '^[A-Za-z][A-Za-z0-9_.]*$', 0, 'Usernames must have only letters, numbers, dots or underscores')])
     password = PasswordField(
@@ -45,3 +46,22 @@ class Change_Password_Form(FlaskForm):
     confirm_pw = PasswordField('Confirm password.',
                                validators=[DataRequired()])
     submit = SubmitField('Submit')
+
+
+class PasswordResetRequestForm(FlaskForm):
+    email = StringField('Email', validators=[
+                        DataRequired(), Length(1, 64), Email()])
+    submit = SubmitField('Reset Password')
+
+
+class PasswordResetForm(FlaskForm):
+    email = StringField('Email', validators=[
+                        DataRequired(), Length(1, 64), Email()])
+    password = PasswordField('New Password', validators=[
+        DataRequired(), EqualTo('password2', message='Password must match')])
+    password2 = PasswordField('Confirm Password', validators=[DataRequired()])
+    submit = SubmitField('Reset Password')
+
+    def validate_email(self, field):
+        if User.query.filter_by(email=field.data).first() is None:
+            raise ValidationError('Unknown email address.')
