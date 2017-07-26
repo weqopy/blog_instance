@@ -5,10 +5,12 @@
 
 {% block page_content %}
 <div class="page_header">
-    <h1>Register.</h1>
-    <p>The local date and time is {{ moment(current_time).format('LLL') }}.</p>
+    <h1>Register</h1>
 </div>
 <div class="col-md-4">
     {{ wtf.quick_form(form) }}
+</div>
+<div class="container">
+    <p>The local date and time is {{ moment(current_time).format('LLL') }}.</p>
 </div>
 {% endblock %}
