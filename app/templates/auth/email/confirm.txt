@@ -1,7 +1,6 @@
 {{ user.username}} 你好，
 欢迎加入 Blog-Instance。
-
-确认链接：
+请点击以下链接确认账户：
 {{ url_for('auth.confirm', token=token, _external=True) }}
 
 Blog Team
