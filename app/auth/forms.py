@@ -5,7 +5,6 @@ from ..models import User
 
 
 class RegistForm(FlaskForm):
-    """docstring for RegistForm"""
     email = StringField('Email', validators=[
                         DataRequired(), Length(1, 64), Email()])
     username = StringField("What's your name?", validators=[DataRequired(), Length(1, 64), Regexp(
@@ -29,7 +28,6 @@ class RegistForm(FlaskForm):
 
 
 class LoginForm(FlaskForm):
-    """docstring for LoginForm"""
     username = StringField("Username", validators=[DataRequired()])
     password = PasswordField("Password", validators=[DataRequired()])
     remember_me = BooleanField('Keep me logged in')
