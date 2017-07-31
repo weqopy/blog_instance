@@ -111,21 +111,24 @@ def confirm(token):
     return redirect(url_for('main.index'))
 
 
-# 屏蔽过滤，仅在 account 页面提示未认证
-# @auth.before_app_request
-# def before_request():
-#     if current_user.is_authenticated \
-#             and not current_user.confirmed \
-#             and request.endpoint[:5] != 'auth.' \
-#             and request.endpoint != 'static':
-#         return redirect(url_for('auth.unconfirmed'))
+# 认证状态验证
+# 更新已登录用户的访问时间
+@auth.before_app_request
+def before_request():
+    if current_user.is_authenticated:
+        current_user.ping()
+        if not current_user.confirmed \
+                and request.endpoint \
+                and request.endpoint[:5] != 'auth.' \
+                and request.endpoint != 'static':
+            return redirect(url_for('auth.unconfirmed'))
 
 
-# @auth.route('/unconfirmed')
-# def unconfirmed():
-#     if current_user.is_anonymous or current_user.confirmed:
-#         return redirect(url_for('main.index'))
-#     return render_template('auth/unconfirmed.html')
+@auth.route('/unconfirmed')
+def unconfirmed():
+    if current_user.is_anonymous or current_user.confirmed:
+        return redirect(url_for('main.index'))
+    return render_template('auth/unconfirmed.html')
 
 
 @auth.route('/confirm')
