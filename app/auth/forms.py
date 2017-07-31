@@ -7,7 +7,7 @@ from ..models import User
 class RegistForm(FlaskForm):
     email = StringField('Email', validators=[
                         DataRequired(), Length(1, 64), Email()])
-    username = StringField("What's your name?", validators=[DataRequired(), Length(6, 12), Regexp(
+    username = StringField("What's your name?", validators=[DataRequired(), Length(5, 12), Regexp(
         '^[A-Za-z][A-Za-z0-9_.]*$', 0, 'Usernames must have only letters, numbers, dots or underscores')])
     password = PasswordField(
         "Password",
