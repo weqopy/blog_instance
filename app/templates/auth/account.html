@@ -14,6 +14,11 @@
 </div>
 
 <div>
+    {% if current_user.is_administrator %}
+    <p>Role: Admin</p>
+    {% endif %}
+</div>
+<div>
     <p>
         {% if not current_user.confirmed %}
             请查收邮件确认账户信息。
