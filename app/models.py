@@ -6,6 +6,14 @@ from . import db, login_manager
 from datetime import datetime
 
 
+class Permission:
+    FOLLOW = 0x01
+    COMMIT = 0x02
+    WRITE_ARTICLES = 0x04
+    MODERATE_COMMENTS = 0x08
+    ADMINISTER = 0x80
+
+
 class Role(db.Model):
     __tablename__ = 'roles'
     id = db.Column(db.Integer, primary_key=True)
@@ -145,14 +153,6 @@ class User(UserMixin, db.Model):
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
-
-
-class Permission:
-    FOLLOW = 0x01
-    COMMIT = 0x02
-    WRITE_ARTICLES = 0x04
-    MODERATE_COMMENTS = 0x08
-    ADMINISTER = 0x80
 
 
 class AnonymousUser(AnonymousUserMixin):

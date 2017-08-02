@@ -46,7 +46,8 @@ def edit_profile():
     return render_template('edit_profile.html', form=form, user=user)
 
 
-# TODO: 待解决-非 admin 账户仍然可通过 current_user.is_administrator 判断
+# 非 admin 账户仍然可通过 current_user.is_administrator 判断
+# 应使用 current_user.is_administrator()
 @main.route('/edit-profile/<int:id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
