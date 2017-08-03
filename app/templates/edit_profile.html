@@ -1,12 +1,9 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
-{% block title %}Blog-Change_password{% endblock %}
+{% block title %}Blog-Edit-Profile{% endblock %}
 
 {% block page_content %}
-<div class="page_header">
-    <h1>Change Password</h1>
-</div>
 <div class="col-md-4">
     {{ wtf.quick_form(form) }}
 </div>
