@@ -1,4 +1,3 @@
-# *主要面板暂时不需要表单功能
 # 编辑资料表单
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField, BooleanField, SelectField
@@ -39,9 +38,3 @@ class EditProfileAdminForm(FlaskForm):
     def validate_username(self, field):
         if field.data != self.user.username and User.query.filter_by(username=field.data).first():
             raise ValidationError('Username already in use.')
-
-
-# class NameForm(FlaskForm):
-#     """docstring for NameForm"""
-#     name = StringField('What is your name?', validators=[DataRequired()])
-#     submit = SubmitField('Submit')
