@@ -4,15 +4,22 @@ from datetime import datetime
 from flask_login import login_required, current_user
 
 from .. import db
-from .forms import EditProfileForm, EditProfileAdminForm
+from .forms import EditProfileForm, EditProfileAdminForm, PostForm
 from . import main
-from ..models import User, Role
+from ..models import User, Role, Permission, Post
 from ..decorators import admin_required
 
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template("index.html", current_time=datetime.utcnow())
+    form = PostForm()
+    if current_user.can(Permission.WRITE_ARTICLES) and form.validate_on_submit():
+        post = Post(title=form.title.data, body=form.body.data,
+                    author=current_user._get_current_object())
+        db.session.add(post)
+        return redirect(url_for('.index'))
+    posts = Post.query.order_by(Post.timestamp.desc()).all()
+    return render_template("index.html", current_time=datetime.utcnow(), form=form, posts=posts)
 
 
 # 取消 url 结尾 / 符号
