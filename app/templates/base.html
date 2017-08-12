@@ -59,4 +59,8 @@
 {% block scripts %}
 {{ super() }}
 {{moment.include_moment() }}
+
+<div class="page-footer">
+    <p>The local date and time is {{ moment(current_time).format('LLL') }}.</p>
+</div>
 {% endblock %}

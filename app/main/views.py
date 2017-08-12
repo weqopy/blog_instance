@@ -29,7 +29,7 @@ def index():
 # 取消 url 结尾 / 符号
 @main.route('/about')
 def about():
-    return render_template("about.html")
+    return render_template("about.html", current_time=datetime.utcnow())
 
 
 @main.route('/user/<username>')
@@ -38,7 +38,7 @@ def user(username):
     if user is None:
         abort(404)
     posts = user.posts.order_by(Post.timestamp.desc()).all()
-    return render_template('user.html', user=user, posts=posts)
+    return render_template('user.html', user=user, posts=posts, current_time=datetime.utcnow())
 
 
 @main.route('/edit-profile', methods=['GET', 'POST'])
@@ -55,7 +55,7 @@ def edit_profile():
     form.name.data = current_user.name
     form.location.data = current_user.location
     form.about_me.data = current_user.about_me
-    return render_template('edit_profile.html', form=form, user=user)
+    return render_template('edit_profile.html', form=form, user=user, current_time=datetime.utcnow())
 
 
 # 非 admin 账户仍然可通过 current_user.is_administrator 判断
@@ -84,4 +84,26 @@ def edit_profile_admin(id):
     form.name.data = user.name
     form.location.data = user.location
     form.about_me.data = user.about_me
-    return render_template('edit_profile.html', form=form, user=user)
+    return render_template('edit_profile.html', form=form, user=user, current_time=datetime.utcnow())
+
+
+@main.route('/post/<int:id>')
+def post(id):
+    post = Post.query.get_or_404(id)
+    return render_template('post.html', posts=[post], current_time=datetime.utcnow())
+
+
+@main.route('/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit(id):
+    post = Post.query.get_or_404(id)
+    if current_user != post.author and not current_user.can(Permission.ADMINISTER):
+        abort(403)
+    form = PostForm()
+    if form.validate_on_submit():
+        post.body = form.body.data
+        db.session.add(post)
+        flash('The post has been updated.')
+        return redirect(url_for('.post', id=post.id))
+    form.body.data = post.body
+    return render_template('edit_post.html', form=form, current_time=datetime.utcnow())
