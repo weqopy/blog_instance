@@ -1,10 +1,10 @@
-# *主要面板暂时不需要表单功能
 # 编辑资料表单
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField, BooleanField, SelectField
 from wtforms.validators import DataRequired, Length, Email, Regexp, ValidationError
+from flask_pagedown.fields import PageDownField
 
-from ..models import Role, User
+from ..models import Role, User, Post
 
 
 class EditProfileForm(FlaskForm):
@@ -41,7 +41,7 @@ class EditProfileAdminForm(FlaskForm):
             raise ValidationError('Username already in use.')
 
 
-# class NameForm(FlaskForm):
-#     """docstring for NameForm"""
-#     name = StringField('What is your name?', validators=[DataRequired()])
-#     submit = SubmitField('Submit')
+class PostForm(FlaskForm):
+    title = StringField('Title')
+    body = PageDownField('Text', validators=[DataRequired()])
+    submit = SubmitField('Submit')
