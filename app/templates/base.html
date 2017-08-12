@@ -2,8 +2,15 @@
 
 {% block title %}Blog-Instance{% endblock %}
 
+{% block head %}
+{{ super() }}
+<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+<link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+{% endblock %}
+
 {% block navbar %}
-<div class="navbar navbar-default">
+<div class="navbar navbar-default navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -52,4 +59,8 @@
 {% block scripts %}
 {{ super() }}
 {{moment.include_moment() }}
+
+<div class="page-footer">
+    <p>The local date and time is {{ moment(current_time).format('LLL') }}.</p>
+</div>
 {% endblock %}

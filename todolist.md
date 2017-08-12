@@ -8,7 +8,11 @@
 - [x] 数据库
 - [x] 项目结构
 - [ ] 社交
+    - [ ] 文章、列表、详情页
     - [ ] 留言
     - [ ] 评论
     - [ ] 第三方扩展
 - [ ] 服务器
+
+
+> 该项目有多个数据库迁移，需使用`python manage.py db upgrade`命令创建、更新数据库，之后需在`python manage.py shell`命令行模式下输入`Role.insert_roles()`更新`Role`表
