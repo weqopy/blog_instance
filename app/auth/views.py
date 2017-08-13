@@ -35,7 +35,7 @@ def login():
             login_user(user, form.remember_me.data)
             return redirect(request.args.get('next') or url_for('main.index'))
         flash('无效的用户名或密码')
-    return render_template("auth/login.html", form=form)
+    return render_template("auth/login.html", form=form, current_time=datetime.utcnow())
 
 
 @auth.route('/logout')
@@ -61,7 +61,7 @@ def change_password():
             flash('密码已修改')
             return redirect(url_for('main.index'))
         flash('旧密码错误')
-    return render_template('auth/change_password.html', form=form)
+    return render_template('auth/change_password.html', form=form, current_time=datetime.utcnow())
 
 
 @auth.route('/reset', methods=['GET', 'POST'])
@@ -79,7 +79,7 @@ def password_reset_request():
                        next=request.args.get('next'))
         flash('重置密码邮件已发送至邮箱')
         return redirect(url_for('auth.login'))
-    return render_template('auth/reset_password.html', form=form)
+    return render_template('auth/reset_password.html', form=form, current_time=datetime.utcnow())
 
 
 @auth.route('/reset/<token>', methods=['GET', 'POST'])
@@ -96,7 +96,7 @@ def password_reset(token):
             return redirect(url_for('auth.login'))
         else:
             return redirect(url_for('main.index'))
-    return render_template('auth/reset_password.html', form=form)
+    return render_template('auth/reset_password.html', form=form, current_time=datetime.utcnow())
 
 
 @auth.route('/confirm/<token>')
@@ -128,7 +128,7 @@ def before_request():
 def unconfirmed():
     if current_user.is_anonymous or current_user.confirmed:
         return redirect(url_for('main.index'))
-    return render_template('auth/unconfirmed.html')
+    return render_template('auth/unconfirmed.html', current_time=datetime.utcnow())
 
 
 @auth.route('/confirm')
@@ -152,7 +152,7 @@ def change_email_request():
                    user=current_user, token=token, next=request.args.get('next'))
         flash('确认邮件已发送至新邮箱')
         return redirect(url_for('auth.account'))
-    return render_template('auth/change_email.html', form=form)
+    return render_template('auth/change_email.html', form=form, current_time=datetime.utcnow())
 
 
 @auth.route('/change_email/<token>')
