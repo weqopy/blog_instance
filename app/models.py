@@ -11,7 +11,7 @@ import bleach
 
 class Permission:
     FOLLOW = 0x01
-    COMMIT = 0x02
+    COMMENT = 0x02
     WRITE_ARTICLES = 0x04
     MODERATE_COMMENTS = 0x08
     ADMINISTER = 0x80
@@ -58,6 +58,7 @@ class Post(db.Model):
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     body_html = db.Column(db.Text)
+    comments = db.relationship('Comment', backref='post', lazy='dynamic')
 
     @staticmethod
     def generate_fake(count=100):
@@ -86,6 +87,28 @@ class Post(db.Model):
 db.event.listen(Post.body, 'set', Post.on_changed_body)
 
 
+class Comment(db.Model):
+    __tablename__ = 'comments'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(64))
+    body = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    body_html = db.Column(db.Text)
+    disabled = db.Column(db.Boolean)
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
+
+    @staticmethod
+    def on_changed_body(target, value, oldvalue, initiator):
+        allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote',
+                             'em']
+        target.body_html = bleach.linkify(bleach.clean(
+            markdown(value, output_format='html'), tags=allowed_tags, strip=True))
+
+
+db.event.listen(Comment.body, 'set', Comment.on_changed_body)
+
+
 class Follow(db.Model):
     __tablename__ = 'follows'
     follower_id = db.Column(db.Integer, db.ForeignKey('users.id'),
@@ -112,6 +135,8 @@ class User(UserMixin, db.Model):
 
     avatar_hash = db.Column(db.String(32))
     posts = db.relationship('Post', backref='author', lazy='dynamic')
+
+    comments = db.relationship('Comment', backref='author', lazy='dynamic')
 
     followed = db.relationship('Follow',
                                foreign_keys=[Follow.follower_id],
