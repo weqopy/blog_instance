@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 
-{% block title %}Blog - Confirm Account{% endblock %}
+{% block title %}Blog-Confirm Account{% endblock %}
 
 {% block page_content %}
-    <div class="page_header">
-        <p>请查收邮件进行确认。</p>
+    <div class="unconfirmed">
+        <p>请查收邮件确认账户信息。</p>
         <p>
              需要重新发送？
              <a href="{{ url_for('auth.resend_confirmation') }}">点击这里</a>

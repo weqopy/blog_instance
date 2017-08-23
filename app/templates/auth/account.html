@@ -6,7 +6,11 @@
 <div class="page_header">
     <h1>Account</h1>
     <p>Username: {{ current_user.username }}</p>
-    <p>Email: {{ current_user.email }}    <a href="{{ url_for('auth.change_email_request') }}">Change email</a></p>
+    <p>
+        Email:
+        <a href="mailto:{{ current_user.email }}">{{ current_user.email }} </a>
+        <a href="{{ url_for('auth.change_email_request') }}">Change email</a>
+    </p>
 </div>
 
 <div>
@@ -14,17 +18,19 @@
 </div>
 
 <div>
-    {% if current_user.is_administrator() %}
+    {% if current_user.can(Permission.ADMINISTER) %}
     <p>Role: Admin</p>
+    {% else %}
+    <p>Role: Ordinary User</p>
     {% endif %}
 </div>
+
 <div>
-    <p>
         {% if not current_user.confirmed %}
-            请查收邮件确认账户信息。
-            未收到邮件？<a href="{{ url_for('auth.resend_confirmation') }}">重新发送</a>
+            <p>---</p>
+            <p>请查收邮件确认账户信息。</p>
+            <p>需要重新发送？<a href="{{ url_for('auth.resend_confirmation') }}">重新发送</a></p>
         {% endif %}
-    </p>
 </div>
 
 {% endblock %}

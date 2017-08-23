@@ -30,7 +30,7 @@ def index():
     pagination = query.order_by(Post.timestamp.desc()).paginate(
         page, per_page=current_app.config['FLASKY_POSTS_PER_PAGE'], error_out=False)
     posts = pagination.items
-    return render_template("index.html", current_time=datetime.utcnow(), form=form, posts=posts, pagination=pagination, show_followed=show_followed)
+    return render_template("index.html", form=form, posts=posts, pagination=pagination, show_followed=show_followed, current_time=datetime.utcnow())
 
 
 # 取消 url 结尾 / 符号
@@ -45,7 +45,7 @@ def user(username):
     if user is None:
         abort(404)
     posts = user.posts.order_by(Post.timestamp.desc()).all()
-    return render_template('user.html', user=user, posts=posts, current_time=datetime.utcnow())
+    return render_template('user.html', user=user, posts=posts)
 
 
 @main.route('/edit-profile', methods=['GET', 'POST'])
@@ -62,7 +62,7 @@ def edit_profile():
     form.name.data = current_user.name
     form.location.data = current_user.location
     form.about_me.data = current_user.about_me
-    return render_template('edit_profile.html', form=form, user=user, current_time=datetime.utcnow())
+    return render_template('edit_profile.html', form=form, user=user)
 
 
 # 非 admin 账户仍然可通过 current_user.is_administrator 判断
@@ -91,7 +91,7 @@ def edit_profile_admin(id):
     form.name.data = user.name
     form.location.data = user.location
     form.about_me.data = user.about_me
-    return render_template('edit_profile.html', form=form, user=user, current_time=datetime.utcnow())
+    return render_template('edit_profile.html', form=form, user=user)
 
 
 @main.route('/post/<int:id>', methods=['GET', 'POST'])
@@ -111,7 +111,7 @@ def post(id):
     pagination = post.comments.order_by(Comment.timestamp.asc()).paginate(
         page, per_page=current_app.config['FLASK_COMMENTS_PER_PAGE'], error_out=False)
     comments = pagination.items
-    return render_template('post.html', posts=[post], form=form, comments=comments, current_time=datetime.utcnow())
+    return render_template('post.html', posts=[post], form=form, comments=comments)
 
 
 @main.route('/edit/<int:id>', methods=['GET', 'POST'])
@@ -129,7 +129,7 @@ def edit(id):
         return redirect(url_for('.post', id=post.id))
     form.title.data = post.title
     form.body.data = post.body
-    return render_template('edit_post.html', form=form, current_time=datetime.utcnow())
+    return render_template('edit_post.html', form=form)
 
 
 @main.route('/follow/<username>')
@@ -175,7 +175,7 @@ def followers(username):
         page, per_page=current_app.config['FLASKY_FOLLOWERS_PER_PAGE'], error_out=False)
     follows = [{'user': item.follower, 'timestamp': item.timestamp}
                for item in pagination.items]
-    return render_template('followers.html', user=user, title="Followers of", endpoint='.followers', pagination=pagination, follows=follows, current_time=datetime.utcnow())
+    return render_template('followers.html', user=user, title="Followers of", endpoint='.followers', pagination=pagination, follows=follows)
 
 
 @main.route('/followed-by/<username>')
@@ -192,7 +192,7 @@ def followed_by(username):
                for item in pagination.items]
     return render_template('followers.html', user=user, title="Followed by",
                            endpoint='.followed_by', pagination=pagination,
-                           follows=follows, current_time=datetime.utcnow())
+                           follows=follows)
 
 
 @main.route('/all')
@@ -209,3 +209,34 @@ def show_followed():
     resp = make_response(redirect(url_for('.index')))
     resp.set_cookie('show_followed', '1', max_age=30 * 24 * 60 * 60)
     return resp
+
+
+@main.route('/moderate')
+@login_required
+@permission_required(Permission.MODERATE_COMMENTS)
+def moderate():
+    page = request.args.get('page', 1, type=int)
+    pagination = Comment.query.order_by(Comment.timestamp.desc()).paginate(
+        page, per_page=current_app.config['FLASK_COMMENTS_PER_PAGE'], error_out=False)
+    comments = pagination.items
+    return render_template('moderate.html', comments=comments, pagination=pagination, page=page)
+
+
+@main.route('/moderate/enable/<int:id>')
+@login_required
+@permission_required(Permission.MODERATE_COMMENTS)
+def moderate_enable(id):
+    comment = Comment.query.get_or_404(id)
+    comment.disabled = False
+    db.session.add(comment)
+    return redirect(url_for('.moderate', page=request.args.get('page', 1, type=int)))
+
+
+@main.route('/moderate/disable/<int:id>')
+@login_required
+@permission_required(Permission.MODERATE_COMMENTS)
+def moderate_disable(id):
+    comment = Comment.query.get_or_404(id)
+    comment.disabled = True
+    db.session.add(comment)
+    return redirect(url_for('.moderate', page=request.args.get('page', 1, type=int)))
