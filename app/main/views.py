@@ -111,7 +111,7 @@ def post(id):
     pagination = post.comments.order_by(Comment.timestamp.asc()).paginate(
         page, per_page=current_app.config['FLASK_COMMENTS_PER_PAGE'], error_out=False)
     comments = pagination.items
-    return render_template('post.html', posts=[post], form=form, comments=comments)
+    return render_template('post.html', posts=[post], pagination=pagination, form=form, comments=comments)
 
 
 @main.route('/edit/<int:id>', methods=['GET', 'POST'])

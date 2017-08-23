@@ -11,9 +11,9 @@ class Config(object):
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     FLASKY_ADMIN = os.environ.get('FLASKY_ADMIN')
-    FLASKY_POSTS_PER_PAGE = 20
+    FLASKY_POSTS_PER_PAGE = 30
     FLASKY_FOLLOWERS_PER_PAGE = 50
-    FLASK_COMMENTS_PER_PAGE = 5
+    FLASK_COMMENTS_PER_PAGE = 30
 
     MAIL_SERVER = 'smtp.googlemail.com'
     MAIL_PORT = 587
