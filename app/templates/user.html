@@ -19,7 +19,7 @@
 
         <!-- 应使用 is_administrator() -->
         {% if current_user.is_administrator() %}
-        <p><a href="mailto:{{ user.email }}">Admin Email: {{ user.email }}</a></p>
+        <p>Admin Email: <a href="mailto:{{ user.email }}">{{ user.email }}</a></p>
         {% endif %}
 
         {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
@@ -40,13 +40,17 @@
         {% if current_user.is_authenticated and user != current_user and user.is_following(current_user) %}
         | <span class="label label-default">Followers you</span>
         {% endif %}
-    </div>
-    <div>
+    <!-- </div> -->
+    <!-- <div> -->
         <!-- 修改资料，根据用户角色显示对应按钮 -->
         {% if current_user.is_administrator() %}
-            <a class="btn btn-danger" href="{{ url_for('.edit_profile_admin', id=user.id) }}">Edit Profile [Admin]</a>
+        <p>
+        </p>
+        <p><a class="btn btn-danger" href="{{ url_for('.edit_profile_admin', id=user.id) }}">Edit Profile [Admin]</a></p>
         {% else %}
-            <a class="btn btn-default" href="{{ url_for('.edit_profile') }}">Edit Profile</a>
+        <p>
+        </p>
+        <p><a class="btn btn-default" href="{{ url_for('.edit_profile') }}">Edit Profile</a></p>
         {% endif %}
     </div>
 </div>

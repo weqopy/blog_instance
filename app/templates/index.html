@@ -2,7 +2,7 @@
 {% import "bootstrap/wtf.html" as wtf %}
 {% import "_macros.html" as macros %}
 
-{% block title %}Blog-Instance{% endblock %}
+{% block title %}Blog - Instance{% endblock %}
 
 {% block page_content %}
 <div class="page_header">
@@ -42,4 +42,7 @@
 {% block scripts %}
 {{ super() }}
 {{ pagedown.include_pagedown() }}
+<div class="page-footer">
+    <p>The local date and time is {{ moment(current_time).format('LLL') }}.</p>
+</div>
 {% endblock %}
