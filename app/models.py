@@ -10,11 +10,11 @@ import bleach
 
 
 class Permission:
-    FOLLOW = 0x01
-    COMMENT = 0x02
-    WRITE_ARTICLES = 0x04
-    MODERATE_COMMENTS = 0x08
-    ADMINISTER = 0x80
+    FOLLOW = 0x01  # 0b00000001
+    COMMENT = 0x02  # 0b00000011
+    WRITE_ARTICLES = 0x04  # 0b00000111
+    MODERATE_COMMENTS = 0x08  # 0b00001111
+    ADMINISTER = 0x80  # 0b10000000
 
 
 class Role(db.Model):
@@ -27,6 +27,7 @@ class Role(db.Model):
 
     @staticmethod
     def insert_roles():
+        # User: 0x07, Moderator: 0x0f
         roles = {
             'User': (Permission.FOLLOW |
                      Permission.COMMENT |
