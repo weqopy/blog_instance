@@ -18,8 +18,11 @@
 </div>
 
 <div>
+    <!-- 用户账户页面显示用户角色 -->
     {% if current_user.can(Permission.ADMINISTER) %}
     <p>Role: Admin</p>
+    {% elif current_user.can(Permission.MODERATE_COMMENTS) %}
+    <p>Role: Moderator</p>
     {% else %}
     <p>Role: Ordinary User</p>
     {% endif %}
