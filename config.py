@@ -23,6 +23,10 @@ class Config(object):
     FLASKY_MAIL_SUBJECT_PREFIX = '[Blog-Instance]'
     FLASKY_MAIL_SENDER = 'Blog-Instance Admin <sender@example.com>'
 
+    # raise_performance
+    SQLALCHEMY_RECORD_QUERIES = True
+    FLASK_SLOW_DB_QUERY_TIME = 0.5
+
     @staticmethod
     def init_app(app):
         pass
