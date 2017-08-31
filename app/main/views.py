@@ -2,6 +2,7 @@ from flask import render_template, abort, flash, redirect, url_for, request, cur
 from datetime import datetime
 
 from flask_login import login_required, current_user
+from flask_sqlalchemy import get_debug_queries
 
 from .. import db
 from .forms import EditProfileForm, EditProfileAdminForm, PostForm, CommentForm
@@ -251,3 +252,12 @@ def server_shutdown():
         abort(500)
     shutdown()
     return 'Shutting down...'
+
+
+@main.after_app_request
+def after_request(response):
+    for query in get_debug_queries():
+        if query.duration >= current_app.config['FLASK_SLOW_DB_QUERY_TIME']:
+            current_app.logger.warning(
+                'Slow query: {0}\nParameters: {1}\nDuration: {f2}\nContext: {3}\n'.format(query.statement, query.parameters, query.duration, query.context))
+    return response
