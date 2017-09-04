@@ -102,3 +102,10 @@ ENV/
 
 # PyCharm
 .idea
+
+# coverage
+tmp/
+
+# database
+data-dev.sqlite
+data-test.sqlite

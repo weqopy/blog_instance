@@ -23,6 +23,10 @@ class Config(object):
     FLASKY_MAIL_SUBJECT_PREFIX = '[Blog-Instance]'
     FLASKY_MAIL_SENDER = 'Blog-Instance Admin <sender@example.com>'
 
+    # raise_performance
+    SQLALCHEMY_RECORD_QUERIES = True
+    FLASK_SLOW_DB_QUERY_TIME = 0.5
+
     @staticmethod
     def init_app(app):
         pass
@@ -40,12 +44,35 @@ class TestingConfig(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'data-test.sqlite')
+    WTF_CSRF_ENABLED = False
 
 
 class ProductionConfig(Config):
     """docstring for ProductionConfig"""
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'data.sqlite')
+
+    @classmethod
+    def init_app(cls, app):
+        Config.init_app(app)
+
+        import logging
+        from logging.handlers import SMTPHandler
+        credentials = None
+        secure = None
+        if getattr(cls, 'MAIL_USERNAME', None) is not None:
+            credentials = (cls.MAIL_USERNAME, cls.MAIL_PASSWORD)
+            if getattr(cls, 'MAIL_USE_TLS', None):
+                secure = ()
+            mail_handler = SMTPHandler(
+                mailhost=(cls.MAIL_SERVER, cls.MAIL_PORT),
+                fromaddr=cls.FLASKY_MAIL_SENDER,
+                toaddrs=[cls.FLASKY_ADMIN],
+                subject=cls.FLASKY_MAIL_SUBJECT_PREFIX + ' Application Error',
+                credentials=credentials,
+                secure=secure)
+            mail_handler.setLevel(logging.ERROR)
+            app.logger.addHandler(mail_handler)
 
 
 config = {
