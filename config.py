@@ -28,7 +28,7 @@ class Config(object):
     FLASK_SLOW_DB_QUERY_TIME = 0.5
 
     # deploy
-    SSL_DISABLE = True
+    SSL_DISABLE = False
 
     @staticmethod
     def init_app(app):
@@ -79,9 +79,15 @@ class ProductionConfig(Config):
 
 
 class HerokuConfig(ProductionConfig):
+    SSL_DISABLE = bool(os.environ.get('SSL_DISABLE'))
+
     @classmethod
     def init_app(cls, app):
         ProductionConfig.init_app(app)
+
+        # 处理代理服务器首部
+        from werkzeug.contrib.fixers import ProxyFix
+        app.wsgi_app = ProxyFix(app.wsgi_app)
 
         import logging
         from logging import StreamHandler
@@ -89,16 +95,11 @@ class HerokuConfig(ProductionConfig):
         file_handler.setLevel(logging.WARNING)
         app.logger.addHandler(file_handler)
 
-        # 处理代理服务器首部
-        from werkzeug.contrib.fixers import ProxyFix
-        app.wsgi_app = ProxyFix(app.wsgi_app)
-
-    SSL_DISABLE = bool(os.environ.get('SSL_DISABLE'))
-
 
 config = {
     'development': DevelopmentConfig,
     'testing': TestingConfig,
     'production': ProductionConfig,
-    'default': DevelopmentConfig
+    'default': DevelopmentConfig,
+    'heroku': HerokuConfig
 }
