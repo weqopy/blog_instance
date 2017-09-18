@@ -14,8 +14,13 @@ from app.models import Role, User, Post, Follow, Permission, Comment
 from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
 
+# 系统中不存在 FLASK_CONFIG 环境变量时，try 语句返回 create_app('default')
+# 当存在 FLASK_CONFIG 环境变量，且值不属于 config 的键时，报 KeyError 错，此时通过 except 语句返回 create_app('default')
+try:
+    app = create_app(os.getenv('FLASK_CONFIG') or 'default')
+except KeyError:
+    app = create_app('default')
 
-app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 manager = Manager(app)
 migrate = Migrate(app, db)
 
