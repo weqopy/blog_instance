@@ -27,6 +27,9 @@ class Config(object):
     SQLALCHEMY_RECORD_QUERIES = True
     FLASK_SLOW_DB_QUERY_TIME = 0.5
 
+    # deploy
+    SSL_DISABLE = True
+
     @staticmethod
     def init_app(app):
         pass
@@ -73,6 +76,24 @@ class ProductionConfig(Config):
                 secure=secure)
             mail_handler.setLevel(logging.ERROR)
             app.logger.addHandler(mail_handler)
+
+
+class HerokuConfig(ProductionConfig):
+    @classmethod
+    def init_app(cls, app):
+        ProductionConfig.init_app(app)
+
+        import logging
+        from logging import StreamHandler
+        file_handler = StreamHandler()
+        file_handler.setLevel(logging.WARNING)
+        app.logger.addHandler(file_handler)
+
+        # 处理代理服务器首部
+        from werkzeug.contrib.fixers import ProxyFix
+        app.wsgi_app = ProxyFix(app.wsgi_app)
+
+    SSL_DISABLE = bool(os.environ.get('SSL_DISABLE'))
 
 
 config = {
