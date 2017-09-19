@@ -1,5 +1,8 @@
 # blog_instance
 
+** 已部署 **
+> [https://weqopy.herokuapp.com/](https://weqopy.herokuapp.com/)
+
 > 设置环境变量
 - `export MAIL_USERNAME=<Gmail username>`
 - `export MAIL_PASSWORD=<Gmail password>`  *应用专用密码*
