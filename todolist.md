@@ -15,4 +15,5 @@
     - [ ] ~~第三方扩展~~
 
 - [ ] test_selenium.py
-- [ ] deploy app
+- [x] deploy app
+    - [Heroku](https://weqopy.herokuapp.com/)
