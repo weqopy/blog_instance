@@ -101,7 +101,7 @@ def post(id):
     form = CommentForm()
     if form.validate_on_submit():
         comment = Comment(body=form.body.data, post=post,
-                          author=current_user._get_current_object())
+                          author=current_user._get_current_object(), disabled=True)
         db.session.add(comment)
         flash('Your comment has been published.')
         return redirect(url_for('.post', id=post.id, page=-1))
