@@ -50,9 +50,9 @@
     - [x] 评论分页
     - [ ] ~~第三方扩展~~
 - 测试、部署
-- [ ] test_selenium.py
-- [x] deploy app
-    - [Heroku](https://weqopy.herokuapp.com/)
+    - [ ] test_selenium.py
+    - [x] deploy app
+        - [Heroku](https://weqopy.herokuapp.com/)
 - 文章、评论管理
     - [x] 评论默认不可见
     - [ ] 评论可删除
