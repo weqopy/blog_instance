@@ -28,6 +28,10 @@
                 {% else %}
                 <a class="btn btn-danger btn-xs" href="{{ url_for('.moderate_disable', id=comment.id, page=page) }}">Disable</a>
                 {% endif %}
+
+                {% if not comment.deleted %}
+                <a class="btn btn-danger btn-xs" href="{{ url_for('.moderate_delete', id=comment.id, page=page) }}">Delete</a>
+                {% endif %}
             {% endif %}
         </div>
     </li>

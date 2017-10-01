@@ -118,6 +118,7 @@ class Comment(db.Model):
     body_html = db.Column(db.Text)
     disabled = db.Column(db.Boolean)
     post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
+    deleted = db.Column(db.Boolean, default=False)
 
     @staticmethod
     def on_changed_body(target, value, oldvalue, initiator):

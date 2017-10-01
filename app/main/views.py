@@ -101,7 +101,7 @@ def post(id):
     form = CommentForm()
     if form.validate_on_submit():
         comment = Comment(body=form.body.data, post=post,
-                          author=current_user._get_current_object(), disabled=True)
+                          author=current_user._get_current_object(), disabled=True, deleted=False)
         db.session.add(comment)
         flash('Your comment has been published.')
         return redirect(url_for('.post', id=post.id, page=-1))
@@ -240,6 +240,15 @@ def moderate_disable(id):
     comment = Comment.query.get_or_404(id)
     comment.disabled = True
     db.session.add(comment)
+    return redirect(url_for('.moderate', page=request.args.get('page', 1, type=int)))
+
+
+@main.route('/moderate/delete/<int:id>')
+@login_required
+@permission_required(Permission.MODERATE_COMMENTS)
+def moderate_delete(id):
+    comment = Comment.query.get_or_404(id)
+    db.session.delete(comment)
     return redirect(url_for('.moderate', page=request.args.get('page', 1, type=int)))
 
 
