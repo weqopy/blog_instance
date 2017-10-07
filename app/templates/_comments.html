@@ -11,7 +11,7 @@
             <div class="comment-author"><a href="{{ url_for('.user', username=comment.author.username) }}">{{ comment.author.username }}</a></div>
             <div class="comment-body">
                 {% if comment.disabled %}
-                <p><i>This comment has been disabled by a moderator.</i></p>
+                <p><i>This comment is disabled before moderated by moderator.</i></p>
                 {% endif %}
                 {% if moderate or not comment.disabled %}
                     {% if comment.body_html %}
@@ -27,6 +27,10 @@
                 <a class="btn btn-difault btn-xs" href="{{ url_for('.moderate_enable', id=comment.id, page=page) }}">Enable</a>
                 {% else %}
                 <a class="btn btn-danger btn-xs" href="{{ url_for('.moderate_disable', id=comment.id, page=page) }}">Disable</a>
+                {% endif %}
+
+                {% if not comment.deleted %}
+                <a class="btn btn-danger btn-xs" href="{{ url_for('.moderate_delete', id=comment.id, page=page) }}">Delete</a>
                 {% endif %}
             {% endif %}
         </div>
