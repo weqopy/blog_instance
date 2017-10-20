@@ -268,5 +268,5 @@ def after_request(response):
     for query in get_debug_queries():
         if query.duration >= current_app.config['FLASK_SLOW_DB_QUERY_TIME']:
             current_app.logger.warning(
-                'Slow query: {0}\nParameters: {1}\nDuration: {f2}\nContext: {3}\n'.format(query.statement, query.parameters, query.duration, query.context))
+                'Slow query: {}\nParameters: {}\nDuration: {:.2f}\nContext: {}\n'.format(query.statement, query.parameters, query.duration, query.context))
     return response
