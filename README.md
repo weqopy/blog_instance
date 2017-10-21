@@ -7,8 +7,8 @@
 - `heroku maintenance:on`
 - `git push heroku master`
 - `heroku run python manage.py deploy`
--  `heroku restart`
--  `heroku maintenance:off`
+- `heroku restart`
+- `heroku maintenance:off`
 
 ### 本地环境变量
 - `export MAIL_USERNAME=<Gmail username>`
@@ -55,5 +55,5 @@
         - [Heroku](https://weqopy.herokuapp.com/)
 - 文章、评论管理
     - [x] 评论默认不可见
-    - [ ] 评论可删除
+    - [x] 评论可删除
     - [ ] 文章可删除
